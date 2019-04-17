@@ -21,4 +21,4 @@ class User(db.Model):
     def __repr__(self):
         return (f"id: {self.id}, first: {self.first_name}, last: {self.last_name}, img: {self.img_url}")
 
-
+print('~~~~~END OF FILE MODELS.PY~~~~~§†¥©˙¨¨ˆˆπππππππ')

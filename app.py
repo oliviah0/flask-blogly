@@ -85,3 +85,6 @@ def edit(id):
         return redirect('/users')
 
     return render_template("edit.html", user=user)
+
+
+print('~~~~~END OF FILE APP.PY~~~~~§†¥©˙¨¨ˆˆπππππππ')
