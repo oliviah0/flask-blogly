@@ -9,7 +9,18 @@
         <form method="POST">
             <a href="/users/user/{{user.id }}/edit" class="btn btn-primary">Edit</a>
             <a href="/users/user/{{user.id }}/delete" class="btn btn-danger">Delete</a>
+            <a href="/users/user/{{user.id }}/posts/new" class="btn btn-info"> Add Post </a>
         </form>
+
+        <h2 class="mt-4">Posts</h2>
+        <ul>
+            {% for post in posts %}
+            <li>
+                <a href="/posts/{{ post.id }}"> {{ post.title }} </a>
+                <small>{{ post.created_at }} </small>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
  </div>
 

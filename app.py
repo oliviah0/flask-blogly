@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template, url_for
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -50,7 +50,9 @@ def user(id):
     """Routing for viewing a user """
 
     user = User.query.get(id)
-    return render_template('user.html', user=user)
+    posts = Post.query.filter(Post.user_id == id).all()
+    print(f"~~~~~~ LOOK HERE:, i've got your posts: ", posts)
+    return render_template('user.html', user=user, posts=posts)
 
 
 @app.route('/users/user/<int:id>/delete')
@@ -86,5 +88,24 @@ def edit(id):
 
     return render_template("edit.html", user=user)
 
+@app.route('/users/user/<int:id>/posts/new', methods=["POST", "GET"])
+def new_post(id):
+    """Route for making a new post"""
+    if request.method == "POST":
+        title = request.form['post-title']
+        content = request.form['post-content']
+        post = Post(title=title, content=content, user_id=id)
+        db.session.add(post)
+        db.session.commit()
+        print("LOOK HERE: I added: ", post)
 
-print('~~~~~END OF FILE APP.PY~~~~~§†¥©˙¨¨ˆˆπππππππ')
+        return redirect(f'/users/user/{id}')
+    
+    return render_template("create-post.html", id=id)
+
+@app.route('/posts/<int:post_id>')
+def post(post_id):
+    """Views the post"""
+    post = Post.query.get(post_id)
+    print("LOOK HERE: ", post)
+    return render_template("post.html", post=post)
