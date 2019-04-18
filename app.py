@@ -21,6 +21,8 @@ def root():
 
     return redirect("/users")
 
+##################################################
+# User route
 @app.route('/users')
 def index():
     """Routing for Users list """
@@ -74,10 +76,11 @@ def delete(id):
 @app.route('/users/user/<int:id>/edit', methods=["POST", "GET"])
 def edit(id):
     """Routing for editing a user"""
-
     user = User.query.get_or_404(id)
 
     if request.method == "POST":
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~ Edited")
+
         first_name = request.form['first-name']
         last_name = request.form['last-name']
         img_url = request.form['img-url']
@@ -91,6 +94,9 @@ def edit(id):
         return redirect('/users')
 
     return render_template("edit.html", user=user)
+
+##################################################
+# Posting stuff
 
 @app.route('/users/user/<int:id>/posts/new', methods=["POST", "GET"])
 def new_post(id):
@@ -115,4 +121,13 @@ def post(post_id):
     return render_template("post.html", post=post)
 
 
+@app.route('/posts/<int:post_id>/edit')
+def show_edit_post_form(post_id):
+    """Shows the form to edit a post """
+
+    post = Post.query.get(post_id)
+    return render_template('edit-post.html', post=post)
+##################################################
+# Refactoring
 #It is better to separate get/post methods, because it is easier to understand
+# remove all prints
