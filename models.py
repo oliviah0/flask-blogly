@@ -11,13 +11,14 @@ def connect_db(app):
 
 
 class User(db.Model):
-    
-    __tablename__= "user"
+
+    __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
-    img_url = db.Column(db.String(), default="https://d1ejxu6vysztl5.cloudfront.net/lasagna/lasagna2-sm.jpg")
+    img_url = db.Column(db.String(
+    ), default="https://d1ejxu6vysztl5.cloudfront.net/lasagna/lasagna2-sm.jpg")
 
     def __repr__(self):
         return (f"id: {self.id}, first: {self.first_name}, last: {self.last_name}, img: {self.img_url}")
@@ -25,14 +26,15 @@ class User(db.Model):
     @property
     def full_name(self):
         """Return full name of user. """
-        
+
         return f"{self.first_name} {self.last_name}"
+
 
 class Post(db.Model):
     __tablename__ = "post"
     user = db.relationship('User', backref='post')
-    # post_tags = db.relationship('PostTag', backref='post')
-    tags = db.relationship('Tag', secondary='post_tags', backref='post')
+    post_tags = db.relationship('PostTag', backref='post', cascade="all,delete")
+    tags = db.relationship('Tag', secondary='post_tags', backref='posts')
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), nullable=False)
@@ -40,12 +42,12 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
-
     @property
     def formatted_date(self):
         """Return a formatted date. """
 
         return self.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
+
     def __repr__(self):
         return (f"id: {self.id}, title: {self.title}, content: {self.content}, created at: {self.formatted_date}, user_id: {self.user_id}")
 
@@ -53,25 +55,28 @@ class Post(db.Model):
 class Tag(db.Model):
     """Tags for posts"""
     __tablename__ = "tag"
-    post_tags = db.relationship('PostTag', backref='tag')
-    posts = db.relationship('Post', secondary='post_tags', backref='tag')
+    post_tags = db.relationship('PostTag', cascade="all,delete", backref='tag')
+    # posts = db.relationship('Post', secondary='post_tags', backref='tag')
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    
+
     def __repr__(self):
         return (f"id: {self.id}, name: {self.name}")
 
+
 class PostTag(db.Model):
     __tablename__ = "post_tags"
-    
 
-    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), primary_key=True)
-    tag_id = db.Column(db.Integer, db.ForeignKey("tag.id"), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey(
+        "post.id", ondelete="CASCADE"))
+    tag_id = db.Column(db.Integer, db.ForeignKey("tag.id", ondelete="CASCADE"))
 
     def __repr__(self):
         return f"post_id: {self.post_id}, tag_id: {self.tag_id}"
 ################################################################################################################################################################
 # refactor table names
+
 
 print("!!!~~~~~~~ LOOK HERE: we're running the updated")
