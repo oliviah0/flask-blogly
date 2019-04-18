@@ -57,7 +57,6 @@ def user(id):
 
     user = User.query.get(id)
     posts = Post.query.filter(Post.user_id == id).all()
-    print(f"~~~~~~ LOOK HERE:, i've got your posts: ", posts)
     return render_template('user.html', user=user, posts=posts)
 
 
@@ -69,7 +68,6 @@ def delete(id):
     db.session.delete(user)
     db.session.commit()
 
-    print(f"LOOK HERE: {User.query.all()}")
     return redirect("/users")
 
 
@@ -79,7 +77,6 @@ def edit(id):
     user = User.query.get_or_404(id)
 
     if request.method == "POST":
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~ Edited")
 
         first_name = request.form['first-name']
         last_name = request.form['last-name']
@@ -107,7 +104,6 @@ def new_post(id):
         post = Post(title=title, content=content, user_id=id)
         db.session.add(post)
         db.session.commit()
-        print("LOOK HERE: I added: ", post)
 
         return redirect(f'/users/user/{id}')
     
@@ -117,7 +113,6 @@ def new_post(id):
 def post(post_id):
     """Views the post"""
     post = Post.query.get(post_id)
-    print("LOOK HERE: ", post)
     return render_template("post.html", post=post)
 
 
@@ -159,4 +154,4 @@ def delete_post(post_id):
 ##################################################
 # Refactoring
 #It is better to separate get/post methods, because it is easier to understand
-# remove all prints
+#

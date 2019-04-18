@@ -38,5 +38,10 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
+    @property
+    def formatted_date(self):
+        """Return a formatted date. """
+
+        return self.created_at.strftime("%a %b %-d %Y, %-I:%M %p")
     def __repr__(self):
-        return (f"id: {self.id}, title: {self.title}, content: {self.content}, created at: {self.created_at}, user_id: {self.user_id}")
+        return (f"id: {self.id}, title: {self.title}, content: {self.content}, created at: {self.formatted_date}, user_id: {self.user_id}")

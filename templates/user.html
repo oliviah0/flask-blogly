@@ -2,7 +2,7 @@
 {% block title %} <h1> User </h1> {% endblock %}
 {% block content %} 
 
-<div class="card" style="width: 18rem;">
+<div class="card" style="width: 28rem;">
     <img src={{ user.img_url }} class="card-img-top">
     <div class="card-body">
         <h5 class="card-title">{{ user.full_name }}</h5>
@@ -17,7 +17,7 @@
             {% for post in posts %}
             <li>
                 <a href="/posts/{{ post.id }}"> {{ post.title }} </a>
-                <small>{{ post.created_at }} </small>
+                <small>{{ post.formatted_date }} </small>
             </li>
             {% endfor %}
         </ul>
