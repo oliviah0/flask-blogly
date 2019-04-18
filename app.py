@@ -144,6 +144,17 @@ def post_edit(post_id):
     db.session.commit()
 
     return redirect(f'/posts/{post_id}')
+
+@app.route('/posts/<int:post_id>/delete')
+def delete_post(post_id):
+    """Deletes a post given the id """
+
+    post = Post.query.get(post_id)
+    db.session.delete(post)
+    db.session.commit()
+
+    return redirect("/users")
+
   
 ##################################################
 # Refactoring
