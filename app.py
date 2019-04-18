@@ -15,10 +15,10 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
+
 @app.route('/')
 def root():
     """Homepage redirects to list of users."""
-
     return redirect("/users")
 
 ##################################################
@@ -26,7 +26,6 @@ def root():
 @app.route('/users')
 def index():
     """Routing for Users list """
-
     users = User.query.all()
     return render_template("index.html", users=users)
 
@@ -95,9 +94,11 @@ def edit(id):
 ##################################################
 # Posting stuff
 
+
 @app.route('/users/user/<int:id>/posts/new', methods=["POST", "GET"])
 def new_post(id):
     """Route for making a new post"""
+
     if request.method == "POST":
         title = request.form['post-title']
         content = request.form['post-content']
@@ -106,8 +107,9 @@ def new_post(id):
         db.session.commit()
 
         return redirect(f'/users/user/{id}')
-    
+
     return render_template("create-post.html", id=id)
+
 
 @app.route('/posts/<int:post_id>')
 def post(post_id):
@@ -119,11 +121,11 @@ def post(post_id):
 @app.route('/posts/<int:post_id>/edit')
 def show_edit_post_form(post_id):
     """Shows the form to edit a post """
-
     post = Post.query.get(post_id)
     return render_template('edit-post.html', post=post)
 
-@app.route('/posts/<int:post_id>', methods=["POST"])
+
+@app.route('/posts/<int:post_id>/edit', methods=["POST"])
 def post_edit(post_id):
     """Shows the form to edit a post """
 
@@ -131,7 +133,7 @@ def post_edit(post_id):
     title = request.form['post-title']
     content = request.form['post-content']
 
-    # Modify the post 
+    # Modify the post
     post = Post.query.get(post_id)
     post.title = title
     post.content = content
@@ -139,6 +141,7 @@ def post_edit(post_id):
     db.session.commit()
 
     return redirect(f'/posts/{post_id}')
+
 
 @app.route('/posts/<int:post_id>/delete')
 def delete_post(post_id):
@@ -150,8 +153,8 @@ def delete_post(post_id):
 
     return redirect("/users")
 
-  
+
 ##################################################
 # Refactoring
-#It is better to separate get/post methods, because it is easier to understand
+# It is better to separate get/post methods, because it is easier to understand
 #
