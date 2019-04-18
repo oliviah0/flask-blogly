@@ -127,6 +127,24 @@ def show_edit_post_form(post_id):
 
     post = Post.query.get(post_id)
     return render_template('edit-post.html', post=post)
+
+@app.route('/posts/<int:post_id>', methods=["POST"])
+def post_edit(post_id):
+    """Shows the form to edit a post """
+
+    # Grab the modified changes
+    title = request.form['post-title']
+    content = request.form['post-content']
+
+    # Modify the post 
+    post = Post.query.get(post_id)
+    post.title = title
+    post.content = content
+
+    db.session.commit()
+
+    return redirect(f'/posts/{post_id}')
+  
 ##################################################
 # Refactoring
 #It is better to separate get/post methods, because it is easier to understand
