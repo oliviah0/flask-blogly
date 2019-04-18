@@ -22,6 +22,7 @@ class User(db.Model):
     def __repr__(self):
         return (f"id: {self.id}, first: {self.first_name}, last: {self.last_name}, img: {self.img_url}")
 
+
 class Post(db.Model):
     __tablename__ = "post"
     user = db.relationship('User', backref='post')

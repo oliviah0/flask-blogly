@@ -15,6 +15,11 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
+@app.route('/')
+def root():
+    """Homepage redirects to list of users."""
+
+    return redirect("/users")
 
 @app.route('/users')
 def index():
@@ -38,7 +43,6 @@ def create_user():
                     last_name=last_name, img_url=img_url)
         db.session.add(user)
         db.session.commit()
-        print(user)
 
         return redirect('/users')
 
@@ -109,3 +113,6 @@ def post(post_id):
     post = Post.query.get(post_id)
     print("LOOK HERE: ", post)
     return render_template("post.html", post=post)
+
+
+#It is better to separate get/post methods, because it is easier to understand
