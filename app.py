@@ -163,11 +163,26 @@ def show_tags():
     tags = Tag.query.all()
     return render_template('tags.html', tags=tags)
 
+@app.route('/tags', methods=["POST"])
+def create_tag():
+    tag = request.form["tag-name"]
+    new_tag = Tag(name=tag)
+    db.session.add(new_tag)
+    db.session.commit()
+
+    return redirect('/tags')
+
+
+@app.route('/tags/create-tag')
+def create_tag_form():
+    return render_template('create-tag.html')
+
 
 @app.route('/tags/<int:tag_id>')
 def show_single_tag(tag_id):
     """Shows information about a tag """
     tag = Tag.query.get(tag_id)
+    print(tag.posts)
     return render_template('tag-info.html', tag=tag)
 
 
@@ -208,3 +223,7 @@ def delete_tag(tag_id):
 # Refactoring
 # It is better to separate get/post methods, because it is easier to understand
 # Delete a tag has some bug - cascading
+
+
+# Post.query(column names)...join...
+# You are going to get tuple values instead of instances.

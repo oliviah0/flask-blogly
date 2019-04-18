@@ -31,7 +31,7 @@ class User(db.Model):
 class Post(db.Model):
     __tablename__ = "post"
     user = db.relationship('User', backref='post')
-    post_tags = db.relationship('PostTag', backref='post')
+    # post_tags = db.relationship('PostTag', backref='post')
     tags = db.relationship('Tag', secondary='post_tags', backref='post')
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -70,7 +70,7 @@ class PostTag(db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey("tag.id"), primary_key=True)
 
     def __repr__(self):
-        return f"post_id: {self.post_id}"
+        return f"post_id: {self.post_id}, tag_id: {self.tag_id}"
 ################################################################################################################################################################
 # refactor table names
 
