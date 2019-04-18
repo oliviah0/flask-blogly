@@ -1,7 +1,7 @@
 """Blogly application."""
 
 from flask import Flask, request, redirect, render_template, url_for
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
@@ -155,6 +155,56 @@ def delete_post(post_id):
 
 
 ##################################################
+# Tag stuff
+
+
+@app.route('/tags')
+def show_tags():
+    tags = Tag.query.all()
+    return render_template('tags.html', tags=tags)
+
+
+@app.route('/tags/<int:tag_id>')
+def show_single_tag(tag_id):
+    """Shows information about a tag """
+    tag = Tag.query.get(tag_id)
+    return render_template('tag-info.html', tag=tag)
+
+
+@app.route('/tags/<int:tag_id>/edit')
+def edit_tag_form(tag_id):
+    """ Shows the edit form """
+    tag = Tag.query.get(tag_id)
+    return render_template('tag-edit.html', tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit', methods=["POST"])
+def edit_tag(tag_id):
+    """ Handles the edit submission"""
+    print("Look here:, we've received a post request to edit", )
+    tag = Tag.query.get(tag_id)
+
+    # Grab the form info
+    new_tag_name = request.form["tag-name"]
+
+    # Edit
+    tag.name = new_tag_name
+    db.session.commit()
+
+    return redirect(f'/tags/{tag_id}')
+
+
+@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+def delete_tag(tag_id):
+    """Deletes a tag_id given the id """
+
+    tag = Tag.query.get(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+
+    return redirect("/users")
+
+
+##################################################
 # Refactoring
 # It is better to separate get/post methods, because it is easier to understand
-#
+# Delete a tag has some bug - cascading
