@@ -7,13 +7,11 @@
 
 <p>Written by: {{ post.user.full_name }}</p>
 
-<div>
-            <span>Tags: </span>
-            {% for tag in post.tags %}
-
-            <a href="/tags/{{ tag.id }}" class="badge badge-primary">{{ tag.name }}</a>
-    
-            {% endfor %}
+<div class="mb-3">
+    <span>Tags: </span>
+    {% for tag in post.tags %}
+        <a href="/tags/{{ tag.id }}" class="badge badge-primary font-italic">{{ tag.name }}</a>
+    {% endfor %}
 </div>
 
 <div class="button-section">
@@ -21,8 +19,5 @@
     <a href="/posts/{{ post.id }}/edit" class="btn btn-primary">Edit</a>
     <a href="/posts/{{ post.id }}/delete" class="btn btn-danger">Delete</a>
 </div>
-
-
-
 
 {% endblock %}

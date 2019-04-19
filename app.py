@@ -35,11 +35,13 @@ def create_user():
     """Routing for creating a user """
 
     if request.method == "POST":
+        # Grabs all the form values
         first_name = request.form['first-name']
         last_name = request.form['last-name']
         img_url = request.form['img-url']
         img_url = img_url if img_url else None
 
+        # Creates a user instance
         user = User(first_name=first_name,
                     last_name=last_name, img_url=img_url)
         db.session.add(user)
@@ -91,7 +93,7 @@ def edit(id):
 
     return render_template("edit.html", user=user)
 
-##################################################
+# ``
 # Posting stuff
 
 
@@ -100,21 +102,20 @@ def new_post(id):
     """Route for making a new post"""
 
     if request.method == "POST":
-        
+
         # Grab form info from html
         title = request.form['post-title']
         content = request.form['post-content']
-        tag_ids = request.form.getlist("tags") # converts all the tags into ints
+        # converts all the tags into ints
+        tag_ids = request.form.getlist("tags")
 
         # Creates a post
         post = Post(title=title, content=content, user_id=id)
-        db.session.add(post)
-        db.session.commit()
 
         # Grab all the tags
         for tag_id in tag_ids:
             post.tags.append(Tag.query.get(int(tag_id)))
-        
+
         db.session.commit()
 
         return redirect(f'/users/user/{id}')
@@ -135,7 +136,8 @@ def post(post_id):
 def show_edit_post_form(post_id):
     """Shows the form to edit a post """
     post = Post.query.get(post_id)
-    return render_template('edit-post.html', post=post)
+    tags = Tag.query.all()
+    return render_template('edit-post.html', post=post, tags=tags)
 
 
 @app.route('/posts/<int:post_id>/edit', methods=["POST"])
@@ -145,11 +147,24 @@ def post_edit(post_id):
     # Grab the modified changes
     title = request.form['post-title']
     content = request.form['post-content']
+    tag_ids = request.form.getlist("tags")
+
 
     # Modify the post
     post = Post.query.get(post_id)
     post.title = title
     post.content = content
+    # Grab current tags and compare to the form result tags
+
+    current_tags = post.tags
+    print(f"~~~~~CURENT TAGS: {current_tags}")
+    # import pdb
+    # pdb.set_trace()
+
+    # Grab all the tags
+    # NEED TO FIGURE OUT HOW TO HANDLE TAGS THAT ARE UNCLICKED
+    # for tag_id in tag_ids:
+    #     post.tags.append(Tag.query.get(int(tag_id)))
 
     db.session.commit()
 
@@ -175,6 +190,7 @@ def delete_post(post_id):
 def show_tags():
     tags = Tag.query.all()
     return render_template('tags.html', tags=tags)
+
 
 @app.route('/tags', methods=["POST"])
 def create_tag():
@@ -204,6 +220,7 @@ def edit_tag_form(tag_id):
     """ Shows the edit form """
     tag = Tag.query.get(tag_id)
     return render_template('tag-edit.html', tag=tag)
+
 
 @app.route('/tags/<int:tag_id>/edit', methods=["POST"])
 def edit_tag(tag_id):
