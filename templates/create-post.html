@@ -12,9 +12,20 @@
     <label for="post-content">Content</label>
     <textarea name="post-content" type="text" class="form-control" id="post-content"></textarea>
   </div>
-  
+  <div class=>
+
+    <div class="form-check">
+      {% for tag in tags %}
+      <input class="form-check-input" type="checkbox" value="{{ tag.id }}" id="tag_{{ tag.id }}" name="tags">
+      <label class="form-check-label" for="tags">
+        {{ tag.name }}
+      </label>
+      {% endfor %}
+    </div>
+  </div>
+
   <a href="/users" class="btn btn-info"> Cancel </a>
   <button type="submit" class="btn btn-success"> Add </button>
 </form>
-    
+
 {% endblock %}

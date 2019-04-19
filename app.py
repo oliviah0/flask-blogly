@@ -100,15 +100,28 @@ def new_post(id):
     """Route for making a new post"""
 
     if request.method == "POST":
+        
+        # Grab form info from html
         title = request.form['post-title']
         content = request.form['post-content']
+        tag_ids = request.form.getlist("tags") # converts all the tags into ints
+
+        # Creates a post
         post = Post(title=title, content=content, user_id=id)
         db.session.add(post)
         db.session.commit()
 
+        # Grab all the tags
+        for tag_id in tag_ids:
+            post.tags.append(Tag.query.get(int(tag_id)))
+        
+        db.session.commit()
+
         return redirect(f'/users/user/{id}')
 
-    return render_template("create-post.html", id=id)
+    # Send all the tags
+    tags = Tag.query.all()
+    return render_template("create-post.html", id=id, tags=tags)
 
 
 @app.route('/posts/<int:post_id>')
@@ -208,7 +221,7 @@ def edit_tag(tag_id):
     return redirect(f'/tags/{tag_id}')
 
 
-@app.route('/tags/<int:tag_id>/delete', methods=["POST"])
+@app.route('/tags/<int:tag_id>/delete')
 def delete_tag(tag_id):
     """Deletes a tag_id given the id """
 
