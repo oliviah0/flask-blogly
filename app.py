@@ -147,24 +147,16 @@ def post_edit(post_id):
     # Grab the modified changes
     title = request.form['post-title']
     content = request.form['post-content']
-    tag_ids = request.form.getlist("tags")
+    list_tags = request.form.getlist("tags")
 
 
     # Modify the post
     post = Post.query.get(post_id)
     post.title = title
     post.content = content
-    # Grab current tags and compare to the form result tags
 
-    current_tags = post.tags
-    print(f"~~~~~CURENT TAGS: {current_tags}")
-    # import pdb
-    # pdb.set_trace()
-
-    # Grab all the tags
-    # NEED TO FIGURE OUT HOW TO HANDLE TAGS THAT ARE UNCLICKED
-    # for tag_id in tag_ids:
-    #     post.tags.append(Tag.query.get(int(tag_id)))
+    # Grab the Tag using the id from list_tags
+    post.tags = [Tag.query.get(int(tag)) for tag in list_tags]
 
     db.session.commit()
 
